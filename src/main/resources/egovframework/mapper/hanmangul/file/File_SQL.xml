@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!--Converted at: Wed May 11 15:49:38 KST 2016-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FileDAO">
+
+    <insert id="FileDAO.insertFileList">
+        INSERT INTO tb_file (RFRNC_TBL, RFRNC_SN, ORGNL_FILE_NM, SRVR_FILE_NM, FILE_EXTN_NM, FILE_PATH, FILE_SZ, FILE_DWNLD_AUTHRT_CD, FILE_DEL_AUTHRT_CD, RGTR_SN, USE_YN)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+             (#{item.rfrncTbl}, #{item.rfrncSn}, #{item.orgnlFileNm}, #{item.srvrFileNm}, #{item.fileExtnNm}, #{item.filePath}, #{item.fileSz}, #{item.fileDwnldAuthrtCd}, #{item.fileDelAuthrtCd}, #{item.rgtrSn}, #{item.useYn})
+        </foreach>
+
+    </insert>
+
+    <select id="FileDAO.selectFileList" resultType="hanmangul.common.file.dto.FileDto">
+        SELECT FILE_SN, RFRNC_TBL, RFRNC_SN, ORGNL_FILE_NM, SRVR_FILE_NM, FILE_SZ, FILE_EXTN_NM
+        FROM tb_file
+        WHERE RFRNC_SN = #{rfrncSn}
+        AND RFRNC_TBL = #{rfrncTbl}
+        and USE_YN = 'Y'
+
+    </select>
+
+    <select id="FileDAO.selectFile" resultType="hanmangul.common.file.vo.FileVO">
+        SELECT FILE_SN, RFRNC_TBL, RFRNC_SN, ORGNL_FILE_NM, SRVR_FILE_NM, FILE_PATH, FILE_SZ, FILE_DWNLD_AUTHRT_CD, FILE_DEL_AUTHRT_CD, FILE_EXTN_NM
+        FROM tb_file
+        WHERE FILE_SN = #{fileSn}
+    </select>
+
+    <select id="FileDAO.selectFileListInFileSn" resultType="hanmangul.common.file.vo.FileVO">
+        SELECT FILE_SN, RFRNC_SN, RFRNC_TBL, ORGNL_FILE_NM, SRVR_FILE_NM, FILE_EXTN_NM, FILE_PATH, FILE_SZ, FILE_DWNLD_AUTHRT_CD, FILE_DEL_AUTHRT_CD, RGTR_SN
+        FROM tb_file
+        WHERE FILE_SN IN
+        <foreach collection="list" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </select>
+
+<!--    <delete id="FileDAO.deleteAll">-->
+<!--        DELETE-->
+<!--        FROM tb_file-->
+<!--        WHERE FILE_SN IN-->
+<!--        <foreach collection="list" item="item" separator="," open="(" close=")">-->
+<!--            #{item}-->
+<!--        </foreach>-->
+<!--    </delete>-->
+
+    <update id="FileDAO.deleteAll">
+        UPDATE tb_file
+        SET USE_YN = 'N'
+        WHERE RFRNC_TBL = 'NOTICE'
+        AND FILE_SN in
+        <foreach collection="list" item="item" separator="," open="(" close=")">
+        #{item}
+        </foreach>
+    </update>
+</mapper>

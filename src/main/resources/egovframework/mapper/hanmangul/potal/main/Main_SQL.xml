@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><!--Converted at: Wed May 11 15:49:38 KST 2016-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MainDAO">
+
+    <select id="getMenu" resultType="egovMap">
+        SELECT menu_seq
+             , menu_name
+             , menu_fold
+        FROM menu
+        WHERE menu_use_yn = 'Y'
+    </select>
+    
+    <select id="getBoardCnt" resultType="int">
+        SELECT count(*)
+        FROM board
+        WHERE board_use_yn = 'Y'
+            AND board_type = #{pagePath}
+    </select>
+
+    <select id="getBoardList" resultType="egovMap">
+        SELECT board_seq
+             , board_title
+             , board_user
+             , DATE_FORMAT(board_cre_dt, '%Y-%m-%d %H:%i:%S') as board_cre_dt
+        FROM board
+        WHERE board_use_yn = 'Y'
+           AND board_type = #{pagePath}
+        ORDER BY board_cre_dt ASC
+        LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+    </select>
+
+    <select id="getMenuName" resultType="String">
+        SELECT menu_name
+        FROM menu
+        WHERE menu_use_yn = 'Y'
+         AND menu_fold = #{pageName}
+    </select>
+
+    <insert id="putMapHome">
+        INSERT INTO maphome (
+            map_name,
+            map_lat,
+            map_lng
+        )
+        VALUES (
+            #{mapName},
+            #{mapLat},
+            #{mapLng}
+        )
+    </insert>
+
+    <select id="getMapHome" resultType="egovMap">
+        SELECT map_name
+             , map_lat
+             , map_lng
+        FROM maphome
+        WHERE map_use_yn = 'Y'
+    </select>
+</mapper>

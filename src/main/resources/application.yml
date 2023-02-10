@@ -1,0 +1,36 @@
+server:
+  servlet:
+    context-path: /
+  port: 80
+
+spring:
+  main:
+    allow-circular-references: true
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+      use-new-id-generator-mappings: false
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        default_batch_fetch_size: 100 # in 쿼리의 갯수 (데이터가 1000 개 가 있을 경우 10번 쿼리가 나간다)
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    database: mysql
+
+  data:
+    web:
+      pageable:
+        default-page-size: 10
+
+  servlet:
+    multipart:
+      location: /srv/hanmangul/upload
+      maxFileSize: 100MB
+      maxRequestSize: 150MB
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.springframework.boot.autoconfigure: ERROR
